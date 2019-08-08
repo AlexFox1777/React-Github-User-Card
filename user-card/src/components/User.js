@@ -1,6 +1,7 @@
 import React from 'react'
 import UserCard from "./UserCard";
 import Followers from "./Followers";
+import Grid from "@material-ui/core/Grid";
 
 
 export default class User extends React.Component{
@@ -9,7 +10,8 @@ export default class User extends React.Component{
         super();
         this.state={
             user: {},
-            followers: []
+            followers: [],
+            follower: []
         }
     }
 
@@ -37,21 +39,24 @@ export default class User extends React.Component{
     fetchFollower = () =>{
         this.state.followers.map(item => {
             console.log("I am in loop");
-            // fetch(`${item}/url`)
-            //     .then(response => response.json())
-            //     .then(follower => this.setState({follower: [...this.state.follower ,follower]}))
-            //     .catch(error => console.log(error));
+            fetch(`${item.url}`)
+                .then(response => response.json())
+                .then(follower => this.setState({follower: [...this.state.follower ,follower]}))
+                .catch(error => console.log(error));
         })
     };
 
     render() {
         console.log(this.state.user);
         console.log(this.state.followers);
+        console.log(this.state.follower);
         return (
-            <div>
-                <UserCard user={this.state.user}/>
-                <Followers followers={this.state.followers}/>
-            </div>
+            <Grid container spacing={2} justify={"center"}>
+                <Grid item xs={12}><UserCard user={this.state.user}/></Grid>
+                {this.state.follower.map(item =>
+                    <Grid item xs={4}> <Followers followers={item}/></Grid>
+                )}
+            </Grid>
         )
     }
 
